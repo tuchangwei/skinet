@@ -14,7 +14,22 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddDbContext<StoreContext>((optionsBuilder) =>
 optionsBuilder.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 var app = builder.Build();
+using(var scrope = app.Services.CreateScope()) {//run database migration when app runs.
+    var services = scrope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<StoreContext>();
+        await context.Database.MigrateAsync();
+        
+    }
+    catch (Exception ex)
+    {
+       var logger = services.GetRequiredService<ILoggerFactory>().CreateLogger<Program>();
+       logger.LogError(ex, "An error occurred during migration");
 
+    }
+
+}
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
