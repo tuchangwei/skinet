@@ -16,15 +16,17 @@ optionsBuilder.UseSqlite(builder.Configuration.GetConnectionString("DefaultConne
 var app = builder.Build();
 using(var scrope = app.Services.CreateScope()) {//run database migration when app runs.
     var services = scrope.ServiceProvider;
+    var loggerFoctory = services.GetRequiredService<ILoggerFactory>();
     try
     {
         var context = services.GetRequiredService<StoreContext>();
         await context.Database.MigrateAsync();
-        
+
+        await StoreContextSeed.SeedAsync(context, loggerFoctory);
     }
     catch (Exception ex)
     {
-       var logger = services.GetRequiredService<ILoggerFactory>().CreateLogger<Program>();
+       var logger = loggerFoctory.CreateLogger<Program>();
        logger.LogError(ex, "An error occurred during migration");
 
     }
