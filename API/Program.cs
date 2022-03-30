@@ -24,8 +24,8 @@ builder.Services.AddApplicationServices();
 
 
 var app = builder.Build();
-using(var scrope = app.Services.CreateScope()) {//run database migration when app runs.
-    var services = scrope.ServiceProvider;
+using(var scope = app.Services.CreateScope()) {//run database migration when app runs.
+    var services = scope.ServiceProvider;
     var loggerFoctory = services.GetRequiredService<ILoggerFactory>();
     try
     {
