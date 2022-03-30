@@ -11,11 +11,12 @@ namespace Core.Specifications
     {
         public ProductWithFiltersForCountSpecification(ProductSpecParams productcParams)
          : base(x => 
+             (string.IsNullOrEmpty(productcParams.Search) || x.Name.ToLower().Contains(productcParams.Search)) &&
              (!productcParams.BrandId.HasValue || x.ProductBrandId == productcParams.BrandId)
               && (!productcParams.TypeId.HasValue || x.ProductTypeId == productcParams.TypeId)
         )
         {
-            
+
         }
     }
 }
