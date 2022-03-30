@@ -21,6 +21,13 @@ builder.Services.AddAutoMapper(typeof(Product), typeof(ProductToReturnDto));
 builder.Services.AddDbContext<StoreContext>((optionsBuilder) =>
 optionsBuilder.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddApplicationServices();
+builder.Services.AddCors(opt => 
+{
+    opt.AddPolicy("CorsPolicy", policy => 
+    {
+        policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200");
+    });
+});
 
 
 var app = builder.Build();
@@ -50,9 +57,8 @@ app.UseSwaggerUI();
 app.UseStatusCodePagesWithReExecute("/error/{0}");
 app.UseStaticFiles();
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
+app.UseCors("CorsPolicy");
 app.MapControllers();
 
 app.Run();
