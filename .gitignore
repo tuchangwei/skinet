@@ -13,6 +13,7 @@
 *.sln.docstates
 appsettings.json
 *.db
+client/ssl
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
